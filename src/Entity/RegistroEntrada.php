@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RegistroEntradaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\UuidV6;
 
 #[ORM\Entity(repositoryClass: RegistroEntradaRepository::class)]
 #[ApiResource]
@@ -17,34 +18,39 @@ class RegistroEntrada
 
     #[ORM\OneToOne(inversedBy: 'registroEntrada', targetEntity: Movimento::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private $movimento;
+    private Movimento $movimento;
 
     #[ORM\ManyToOne(targetEntity: Programa::class, inversedBy: 'registroEntradas')]
     #[ORM\JoinColumn(nullable: false)]
-    private $programa;
+    private Programa $programa;
 
     #[ORM\Column(type: 'integer')]
-    private $milhas;
+    private int $milhas;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $valor;
+    private float $valor;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $valorMilha;
+    private float $valorMilha;
 
     #[ORM\Column(type: 'datetime')]
-    private $dataEntrada;
+    private \DateTimeInterface $dataEntrada;
 
     #[ORM\ManyToOne(targetEntity: TipoEntrada::class, inversedBy: 'registroEntradas')]
     #[ORM\JoinColumn(nullable: false)]
-    private $tipoEntrada;
+    private TipoEntrada $tipoEntrada;
 
     #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'registroEntradas')]
     #[ORM\JoinColumn(nullable: false)]
-    private $usuario;
+    private Usuario $usuario;
 
     #[ORM\Column(type: 'guid')]
-    private $codigo;
+    private string $codigo;
+
+    public function __construct()
+    {
+        $this->setCodigo(UuidV6::generate());
+    }
 
     public function getId(): ?int
     {

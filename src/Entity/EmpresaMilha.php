@@ -18,16 +18,16 @@ class EmpresaMilha
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $nome;
+    private string $nome;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $logo;
+    private string $logo;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $url;
+    private string $url;
 
     #[ORM\OneToMany(mappedBy: 'empresaMilha', targetEntity: RegistroSaida::class)]
-    private $registroSaidas;
+    private Collection $registroSaidas;
 
     public function __construct()
     {

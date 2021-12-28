@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\UuidV6;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
 class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
@@ -18,44 +19,44 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $username;
+    private string $username;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private string $password;
 
     #[ORM\ManyToOne(targetEntity: Pessoa::class, inversedBy: 'usuarios')]
     #[ORM\JoinColumn(nullable: false)]
-    private $pessoa;
+    private Pessoa $pessoa;
 
     #[ORM\Column(type: 'datetime')]
-    private $dataCadastro;
+    private \DateTimeInterface $dataCadastro;
 
     #[ORM\Column(type: 'datetime')]
-    private $dataAtualizacao;
+    private \DateTimeInterface $dataAtualizacao;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $ativo;
+    private bool $ativo;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $email;
+    private string $email;
 
     #[ORM\OneToMany(mappedBy: 'usuarioFechamento', targetEntity: Caixa::class)]
-    private $caixas;
+    private Collection $caixas;
 
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Movimento::class)]
-    private $movimentos;
+    private Collection $movimentos;
 
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: RegistroEntrada::class)]
-    private $registroEntradas;
+    private Collection $registroEntradas;
 
     #[ORM\Column(type: 'guid')]
-    private $codigo;
+    private string $codigo;
 
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: RegistroSaida::class)]
-    private $registroSaidas;
+    private Collection $registroSaidas;
 
     public function __construct()
     {
@@ -63,6 +64,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         $this->movimentos = new ArrayCollection();
         $this->registroEntradas = new ArrayCollection();
         $this->registroSaidas = new ArrayCollection();
+        $this->setDataCadastro(new \DateTime())
+            ->setCodigo(UuidV6::generate())
+        ;
     }
 
     public function getId(): ?int

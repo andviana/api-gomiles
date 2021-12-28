@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RegistroSaidaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\UuidV6;
 
 #[ORM\Entity(repositoryClass: RegistroSaidaRepository::class)]
 #[ApiResource]
@@ -17,41 +18,46 @@ class RegistroSaida
 
     #[ORM\OneToOne(inversedBy: 'registroSaida', targetEntity: Movimento::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private $movimento;
+    private Movimento $movimento;
 
     #[ORM\ManyToOne(targetEntity: EmpresaMilha::class, inversedBy: 'registroSaidas')]
     #[ORM\JoinColumn(nullable: false)]
-    private $empresaMilha;
+    private EmpresaMilha $empresaMilha;
 
     #[ORM\ManyToOne(targetEntity: Programa::class, inversedBy: 'registroSaidas')]
     #[ORM\JoinColumn(nullable: false)]
-    private $Programa;
+    private Programa $Programa;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $valor;
+    private float $valor;
 
     #[ORM\Column(type: 'integer')]
-    private $milhas;
+    private int $milhas;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $valorMilha;
+    private float $valorMilha;
 
     #[ORM\Column(type: 'datetime')]
-    private $dataSaida;
+    private \DateTimeInterface $dataSaida;
 
     #[ORM\Column(type: 'datetime')]
-    private $dataCompensacao;
+    private \DateTimeInterface $dataCompensacao;
 
     #[ORM\ManyToOne(targetEntity: TipoSaida::class, inversedBy: 'registroSaidas')]
     #[ORM\JoinColumn(nullable: false)]
-    private $tipoSaida;
+    private TipoSaida $tipoSaida;
 
     #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'registroSaidas')]
     #[ORM\JoinColumn(nullable: false)]
-    private $usuario;
+    private Usuario $usuario;
 
     #[ORM\Column(type: 'guid')]
-    private $codigo;
+    private string $codigo;
+
+    public function __construct()
+    {
+        $this->setCodigo(UuidV6::generate());
+    }
 
     public function getId(): ?int
     {

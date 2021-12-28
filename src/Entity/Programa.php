@@ -18,22 +18,22 @@ class Programa
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $nome;
+    private string $nome;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $logo;
+    private string $logo;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $descricao;
+    private string $descricao;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $url;
+    private string $url;
 
     #[ORM\OneToMany(mappedBy: 'programa', targetEntity: RegistroEntrada::class)]
-    private $registroEntradas;
+    private Collection $registroEntradas;
 
     #[ORM\OneToMany(mappedBy: 'Programa', targetEntity: RegistroSaida::class)]
-    private $registroSaidas;
+    private Collection $registroSaidas;
 
     public function __construct()
     {

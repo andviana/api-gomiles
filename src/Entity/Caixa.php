@@ -18,47 +18,61 @@ class Caixa
     private $id;
 
     #[ORM\Column(type: 'datetime')]
-    private $dataAbertura;
+    private \DateTimeInterface $dataAbertura;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private $dataFechamento;
+    private \DateTimeInterface $dataFechamento;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $ativo;
+    private bool $ativo;
 
     #[ORM\Column(type: 'integer')]
-    private $saldoMilhas;
+    private int $saldoMilhas;
 
     #[ORM\Column(type: 'integer')]
-    private $totalEntradas;
+    private int $totalEntradas;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $valorEntradas;
+    private float $valorEntradas;
 
     #[ORM\Column(type: 'integer')]
-    private $totalSaidas;
+    private int $totalSaidas;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $valorSaidas;
+    private float $valorSaidas;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private $valorEstoqueMilhasPeriodo;
+    private float $valorEstoqueMilhasPeriodo;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private $valorLucroMilhasPeriodo;
+    private float $valorLucroMilhasPeriodo;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private $valorMilhaPeriodo;
+    private float $valorMilhaPeriodo;
 
     #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'caixas')]
-    private $usuarioFechamento;
+    private Usuario $usuarioFechamento;
 
     #[ORM\OneToMany(mappedBy: 'caixa', targetEntity: Movimento::class)]
-    private $movimentos;
+    private Collection $movimentos;
+
+    #[ORM\Column(type: 'guid')]
+    private string $codigo;
 
     public function __construct()
     {
         $this->movimentos = new ArrayCollection();
+        $this->setAtivo(true)
+            ->setDataAbertura(new \DateTime('now'))
+            ->setSaldoMilhas(0)
+            ->setTotalEntradas(0)
+            ->setTotalSaidas(0)
+            ->setValorEntradas(0)
+            ->setValorEstoqueMilhasPeriodo(0)
+            ->setValorLucroMilhasPeriodo(0)
+            ->setValorMilhaPeriodo(0)
+            ->setValorSaidas(0)
+            ;
     }
 
     public function getId(): ?int
@@ -126,12 +140,12 @@ class Caixa
         return $this;
     }
 
-    public function getValorEntradas(): ?string
+    public function getValorEntradas(): ?float
     {
         return $this->valorEntradas;
     }
 
-    public function setValorEntradas(string $valorEntradas): self
+    public function setValorEntradas(float $valorEntradas): self
     {
         $this->valorEntradas = $valorEntradas;
 
@@ -150,48 +164,48 @@ class Caixa
         return $this;
     }
 
-    public function getValorSaidas(): ?string
+    public function getValorSaidas(): ?float
     {
         return $this->valorSaidas;
     }
 
-    public function setValorSaidas(string $valorSaidas): self
+    public function setValorSaidas(float $valorSaidas): self
     {
         $this->valorSaidas = $valorSaidas;
 
         return $this;
     }
 
-    public function getValorEstoqueMilhasPeriodo(): ?string
+    public function getValorEstoqueMilhasPeriodo(): ?float
     {
         return $this->valorEstoqueMilhasPeriodo;
     }
 
-    public function setValorEstoqueMilhasPeriodo(?string $valorEstoqueMilhasPeriodo): self
+    public function setValorEstoqueMilhasPeriodo(?float $valorEstoqueMilhasPeriodo): self
     {
         $this->valorEstoqueMilhasPeriodo = $valorEstoqueMilhasPeriodo;
 
         return $this;
     }
 
-    public function getValorLucroMilhasPeriodo(): ?string
+    public function getValorLucroMilhasPeriodo(): ?float
     {
         return $this->valorLucroMilhasPeriodo;
     }
 
-    public function setValorLucroMilhasPeriodo(?string $valorLucroMilhasPeriodo): self
+    public function setValorLucroMilhasPeriodo(?float $valorLucroMilhasPeriodo): self
     {
         $this->valorLucroMilhasPeriodo = $valorLucroMilhasPeriodo;
 
         return $this;
     }
 
-    public function getValorMilhaPeriodo(): ?string
+    public function getValorMilhaPeriodo(): ?float
     {
         return $this->valorMilhaPeriodo;
     }
 
-    public function setValorMilhaPeriodo(?string $valorMilhaPeriodo): self
+    public function setValorMilhaPeriodo(?float $valorMilhaPeriodo): self
     {
         $this->valorMilhaPeriodo = $valorMilhaPeriodo;
 
@@ -236,6 +250,18 @@ class Caixa
                 $movimento->setCaixa(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCodigo(): ?string
+    {
+        return $this->codigo;
+    }
+
+    public function setCodigo(string $codigo): self
+    {
+        $this->codigo = $codigo;
 
         return $this;
     }

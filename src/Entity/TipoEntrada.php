@@ -18,10 +18,10 @@ class TipoEntrada
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $descricao;
+    private string $descricao;
 
     #[ORM\OneToMany(mappedBy: 'tipoEntrada', targetEntity: RegistroEntrada::class)]
-    private $registroEntradas;
+    private Collection $registroEntradas;
 
     public function __construct()
     {

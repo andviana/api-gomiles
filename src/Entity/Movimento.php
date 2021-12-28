@@ -5,6 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MovimentoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
+use PhpParser\Node\Expr\Cast\Double;
+use Symfony\Component\Uid\UuidV6;
 
 #[ORM\Entity(repositoryClass: MovimentoRepository::class)]
 #[ApiResource]
@@ -16,33 +19,40 @@ class Movimento
     private $id;
 
     #[ORM\Column(type: 'string', length: 1)]
-    private $tipoOperacao;
+    private string $tipoOperacao;
 
     #[ORM\Column(type: 'datetime')]
-    private $data;
+    private \DateTimeInterface $data;
 
     #[ORM\ManyToOne(targetEntity: Caixa::class, inversedBy: 'movimentos')]
     #[ORM\JoinColumn(nullable: false)]
-    private $caixa;
+    private Caixa $caixa;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private $valor;
+    private float $valor;
 
     #[ORM\Column(type: 'integer')]
-    private $quantidade;
+    private int $quantidade;
 
     #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'movimentos')]
     #[ORM\JoinColumn(nullable: false)]
-    private $usuario;
+    private Usuario $usuario;
 
     #[ORM\OneToOne(mappedBy: 'movimento', targetEntity: RegistroEntrada::class, cascade: ['persist', 'remove'])]
-    private $registroEntrada;
+    private RegistroEntrada $registroEntrada;
 
     #[ORM\Column(type: 'guid')]
-    private $codigo;
+    private string $codigo;
 
     #[ORM\OneToOne(mappedBy: 'movimento', targetEntity: RegistroSaida::class, cascade: ['persist', 'remove'])]
-    private $registroSaida;
+    private RegistroSaida $registroSaida;
+
+    public function __construct()
+    {
+        $this->setCodigo(UuidV6::generate())
+            ->setData(new \DateTime())
+        ;
+    }
 
     public function getId(): ?int
     {
@@ -85,12 +95,12 @@ class Movimento
         return $this;
     }
 
-    public function getValor(): ?string
+    public function getValor(): ?float
     {
         return $this->valor;
     }
 
-    public function setValor(string $valor): self
+    public function setValor(float $valor): self
     {
         $this->valor = $valor;
 

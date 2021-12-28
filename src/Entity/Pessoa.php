@@ -7,6 +7,7 @@ use App\Repository\PessoaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\UuidV6;
 
 #[ORM\Entity(repositoryClass: PessoaRepository::class)]
 #[ApiResource]
@@ -18,22 +19,23 @@ class Pessoa
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $nome;
+    private string $nome;
 
     #[ORM\Column(type: 'string', length: 11)]
-    private $cpf;
+    private string $cpf;
 
     #[ORM\Column(type: 'date')]
-    private $dataNascimento;
+    private \DateTimeInterface $dataNascimento;
 
     #[ORM\OneToMany(mappedBy: 'pessoa', targetEntity: Usuario::class)]
-    private $usuarios;
+    private Collection $usuarios;
 
     #[ORM\Column(type: 'guid')]
-    private $codigo;
+    private string $codigo;
 
     public function __construct()
     {
+        $this->setCodigo(UuidV6::generate());
         $this->usuarios = new ArrayCollection();
     }
 

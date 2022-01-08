@@ -18,33 +18,4 @@ class EmpresaMilhaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, EmpresaMilha::class);
     }
-
-    // /**
-    //  * @return EmpresaMilha[] Returns an array of EmpresaMilha objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?EmpresaMilha
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
